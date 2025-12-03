@@ -27,3 +27,7 @@ Repo for the Matrix project for the Introduction to Robotics course
   The schematic was then used to implement the following circuit on multiple breadboards:
 
   ![Circuit](/Checkpoint1/Circuit.jpeg)
+
+## Video showcasing functionality
+
+  This video presents the way the system works in its current state: [Video link]()
