@@ -31,3 +31,7 @@ Repo for the Matrix project for the Introduction to Robotics course
 ## Video showcasing functionality
 
   This video presents the way the system works in its current state: [Video link]()
+
+## Plans for the second checkpoint
+
+  After completing the first checkpoint, I plan to implement a game where the player has to "balance" a virtual ball on a plate (a dot on the LED matrix) by angling the IMU so that they collect as many points as possible without letting the ball fall off the plate.
