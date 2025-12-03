@@ -30,7 +30,7 @@ Repo for the Matrix project for the Introduction to Robotics course
 
 ## Video showcasing functionality
 
-  This video presents the way the system works in its current state: [Video link]()
+  This video presents the way the system works in its current state: [Video link](https://youtu.be/X9oOibPy6bo)
 
 ## Plans for the second checkpoint
 
