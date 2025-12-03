@@ -17,6 +17,8 @@ Repo for the Matrix project for the Introduction to Robotics course
   6. Joystick
   7. Active buzzer
   8. Resistors, potentiometers and wires as needed
+  9. 10uF electrolytic capacitor
+  10. 100nF ceramic capacitor
 
 ## Schematics and photos of the setup
 
