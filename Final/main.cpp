@@ -762,7 +762,7 @@ void handleSettingsValue(uint8_t type) {
   static bool drawn = false;
   static int8_t lastVal = -1;
   
-  uint8_t* targetVal = (type == 0) ? &settingLCDBrightnessUser : &settingMatrixBrightnessUser;
+  uint8_t* targetVal = (type == SET_LCD_BRIGHT) ? &settingLCDBrightnessUser : &settingMatrixBrightnessUser;
   
   if (millis() - lastInputMoveTime > menuMoveCooldown) {
     bool changed = false;
@@ -799,7 +799,7 @@ void handleSettingsValue(uint8_t type) {
   
   if (btnJustPressed) {
     playSoundSequence(seqMenuSelect, 2);
-    currentState = STATE_MENU_SETTINGS;
+    currentState = STATE_MENU_SETTINGS_BACK;
     drawn = false;
   }
 }
