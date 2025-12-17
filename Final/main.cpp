@@ -54,7 +54,7 @@ const uint32_t menuMoveCooldown = 250;
 const int16_t imuTiltThreshold = 3;
 const uint32_t imuReadInterval = 100;
 // const uint32_t imuReinitializeInterval = 20000;
-// uint32_t imuRunningTime = 0;
+uint32_t imuRunningTime = 0;
 
 // Brightness Constants (User scale 1-10)
 const uint8_t brightnessMinUser = 1;
@@ -111,7 +111,6 @@ enum SettingsOption {
   SET_SOUND,
   SET_IMU,
   SET_RESET,
-  SET_BACK,
   SETTINGS_COUNT
 };
 
@@ -157,7 +156,7 @@ bool btnJustPressed = false;
 bool lastBtnState = HIGH;
 uint32_t lastDebounceTime = 0;
 uint32_t lastInputMoveTime = 0; // For menu navigation rate limiting
-uint32_t backToMenuDelay = 100;
+uint32_t backToMenuDelay = 500;
 uint32_t backToMenuIssuedTime = 0;
 uint32_t LCDupdateInteval = 500;
 // Game State
@@ -169,7 +168,7 @@ uint8_t pausedSelectedOption = 0; // 0=Continue, 1=Exit
 // Gameplay Variables
 uint16_t playerCol = 0;
 uint16_t playerRow = 0;
-// bool playerAlive = true;
+bool playerAlive = true;
 uint16_t currentScore = 0;
 uint8_t currentLevelIndex = 0;
 uint32_t levelStartTime = 0;
@@ -720,9 +719,6 @@ void handleSettingsMenu() {
       case SET_RESET: 
         lcd.print(F("Reset Scores"));
         break;
-      case SET_BACK:
-        lcd.print(F("Back to Menu"));
-        break;
     }
     lcd.setCursor(0, 1);
     lcd.print(F("Back: Hold Btn"));
@@ -756,9 +752,6 @@ void handleSettingsMenu() {
       case SET_RESET:
         currentState = STATE_MENU_SETTINGS_RESET_SCORES;
         break;
-      case SET_BACK:
-        currentState = STATE_MENU_SETTINGS;
-        break;
      }
   }
 }
@@ -769,7 +762,7 @@ void handleSettingsValue(uint8_t type) {
   static bool drawn = false;
   static int8_t lastVal = -1;
   
-  uint8_t* targetVal = (type == SET_LCD_BRIGHT) ? &settingLCDBrightnessUser : &settingMatrixBrightnessUser;
+  uint8_t* targetVal = (type == 0) ? &settingLCDBrightnessUser : &settingMatrixBrightnessUser;
   
   if (millis() - lastInputMoveTime > menuMoveCooldown) {
     bool changed = false;
@@ -784,7 +777,7 @@ void handleSettingsValue(uint8_t type) {
     if (changed) {
       playSoundSequence(seqMenuMove, 1);
       lastInputMoveTime = millis();
-      if (type == 0) applyLCDBrightness();
+      if (type == SET_LCD_BRIGHT) applyLCDBrightness();
       else applyMatrixBrightness();
       saveSettings();
     }
@@ -806,7 +799,7 @@ void handleSettingsValue(uint8_t type) {
   
   if (btnJustPressed) {
     playSoundSequence(seqMenuSelect, 2);
-    currentState = STATE_MENU_SETTINGS_BACK;
+    currentState = STATE_MENU_SETTINGS;
     drawn = false;
   }
 }
@@ -866,17 +859,14 @@ void handleSettingsReset() {
   if (btnJustPressed) {
     if (confirm) { 
       // NO selected
-      btnJustPressed = false;
       currentState = STATE_MENU_SETTINGS;
     } else {
       // YES selected
       resetHighScores();
       lcd.clear();
       lcd.print(F("Scores Reset!"));
-      
-      if(btnJustPressed){
-        currentState = STATE_MENU_SETTINGS;
-      }
+      delay(100);
+      currentState = STATE_MENU_SETTINGS;
     }
     playSoundSequence(seqMenuSelect, 2);
     drawn = false;
@@ -885,10 +875,9 @@ void handleSettingsReset() {
 
 void handleAbout() {
   static bool drawn = false;
-
   if (!drawn) {
     lcd.clear();
-    lcd.print(F("Maze Runner v1"));
+    lcd.print(F("Maze Master v1"));
     lcd.setCursor(0, 1);
     lcd.print(F("By MateiHsn"));
     lc.clearDisplay(0);
@@ -1286,6 +1275,7 @@ void loop() {
   }
 
 
+  if(backToMenuIssuedTime - currentTime > backToMenuDelay) {
     // State Machine
     switch(currentState) {
       case STATE_INTRO:
@@ -1337,4 +1327,6 @@ void loop() {
         currentState = STATE_MENU_MAIN;
         break;
     }
+  }
+
 }
