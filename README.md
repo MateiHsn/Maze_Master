@@ -68,4 +68,5 @@ Repo for the Matrix project for the Introduction to Robotics course
   ![Final KiCAD schematic](/Final/Matrix_schematic.png)
 
   A new view of the circuit can be seen below:
+  
   [Video showcasing functionality]()
