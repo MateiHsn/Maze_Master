@@ -156,7 +156,7 @@ bool btnJustPressed = false;
 bool lastBtnState = HIGH;
 uint32_t lastDebounceTime = 0;
 uint32_t lastInputMoveTime = 0; // For menu navigation rate limiting
-uint32_t backToMenuDelay = 500;
+uint32_t backToMenuDelay = 100;
 uint32_t backToMenuIssuedTime = 0;
 uint32_t LCDupdateInteval = 500;
 // Game State
@@ -878,6 +878,7 @@ void handleSettingsReset() {
 
 void handleAbout() {
   static bool drawn = false;
+
   if (!drawn) {
     lcd.clear();
     lcd.print(F("Maze Runner v1"));
