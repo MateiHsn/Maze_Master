@@ -158,7 +158,7 @@ uint32_t lastDebounceTime = 0;
 uint32_t lastInputMoveTime = 0; // For menu navigation rate limiting
 uint32_t backToMenuDelay = 500;
 uint32_t backToMenuIssuedTime = 0;
-
+uint32_t LCDupdateInteval = 500;
 // Game State
 GameState currentState = STATE_INTRO;
 MainMenuOption selectedMainMenu = OPT_START;
@@ -485,7 +485,7 @@ void placeEntities(uint8_t count) {
   }
 }
 
-void initLevel(uint8_t levelIdx) {
+void initLevels(uint8_t levelIdx) {
   currentLevelIndex = levelIdx;
   currentLevelStarsCollected = 0;
   
@@ -496,7 +496,7 @@ void initLevel(uint8_t levelIdx) {
     currentLevelStartCol = 1;
     currentLevelStartRow = 1;
     currentLevelExitCol = 6;
-    currentLevelExitRow = 6;
+    currentLevelExitRow = currentLevelDim - 2;
   } else if (levelIdx == 1) {
     currentLevelRows = level2Data;
     currentLevelDim = 12;
@@ -504,7 +504,7 @@ void initLevel(uint8_t levelIdx) {
     currentLevelStartCol = 1;
     currentLevelStartRow = 1;
     currentLevelExitCol = 10;
-    currentLevelExitRow = 10;
+    currentLevelExitRow = currentLevelDim - 2;
   } else {
     currentLevelRows = level3Data;
     currentLevelDim = 16;
@@ -512,7 +512,7 @@ void initLevel(uint8_t levelIdx) {
     currentLevelStartCol = 1;
     currentLevelStartRow = 1;
     currentLevelExitCol = 14;
-    currentLevelExitRow = 14;
+    currentLevelExitRow = currentLevelDim - 2;
   }
   
   playerCol = currentLevelStartCol;
@@ -523,7 +523,7 @@ void initLevel(uint8_t levelIdx) {
 
 void startGame() {
   currentScore = 0;
-  initLevel(0);
+  initLevels(0);
   currentState = STATE_GAME_PLAYING;
   lcd.clear();
 }
@@ -549,7 +549,6 @@ void updateMatrixViewport() {
         uint8_t levelC = c + colOffset;
         if (levelC < currentLevelDim) {
            if (rowData & (1 << (15 - levelC))) {
-             // Set pixel (flip row logic for Max7219 typically)
              matrixBuffer[r] |= (1 << (7 - c));
            }
         }
@@ -557,7 +556,6 @@ void updateMatrixViewport() {
     }
   }
   
-  // 2. Draw Entities (Stars) - Blink
   if (blinkStateStar) {
     for(uint8_t i=0; i<currentEntityCount; i++) {
       if (currentEntities[i].type == ENTITY_STAR) {
@@ -570,7 +568,6 @@ void updateMatrixViewport() {
     }
   }
   
-  // 3. Draw Exit
   int8_t exitCol = currentLevelExitCol - colOffset;
   int8_t exitRow = currentLevelExitRow - rowOffset;
   if (exitCol >= 0 && exitCol < matrixSize && exitRow >= 0 && exitRow < matrixSize) {
@@ -578,7 +575,6 @@ void updateMatrixViewport() {
     if (drawExit) matrixBuffer[exitRow] |= (1 << (7 - exitCol));
   }
   
-  // 4. Draw Player
   if(blinkStatePlayer) { 
     int8_t playerC = playerCol - colOffset;
     int8_t playerR = playerRow - rowOffset;
@@ -861,12 +857,6 @@ void handleSettingsReset() {
   }
   
   if (btnJustPressed) {
-    if (!confirm) { // Logic inverted in display above? Let's fix: Left=Yes, Right=No usually
-       // Current: >YES (false) NO (true) ?? Let's fix logic
-    }
-    // Simplification:
-    // If confirm was true (NO selected), go back. 
-    // Wait, the display logic was ambiguous. Let's make it explicit.
     if (confirm) { 
       // NO selected
       currentState = STATE_MENU_SETTINGS;
@@ -1039,7 +1029,7 @@ void handleGamePlay() {
                 
                 if (currentLevelIndex < totalLevels - 1) {
                   // Next Level
-                  initLevel(currentLevelIndex + 1);
+                  initLevels(currentLevelIndex + 1);
                 } else {
                   // Victory
                   currentState = STATE_GAME_VICTORY;
@@ -1054,7 +1044,7 @@ void handleGamePlay() {
   
   // 2. Update LCD (Score)
   static uint32_t lastLCDUpdate = 0;
-  if (millis() - lastLCDUpdate > 500) {
+  if (millis() - lastLCDUpdate > LCDupdateInteval) {
     lcd.setCursor(0, 0);
     lcd.print(F("Lv:")); lcd.print(currentLevelIndex+1);
     lcd.print(F(" Stars:")); lcd.print(currentLevelStarsCollected);
@@ -1128,15 +1118,15 @@ void handleVictory() {
   
   if (btnJustPressed) {
     // Check if high score
-    bool isHigh = false;
+    bool isHighScore = false;
     for(uint8_t i=0; i<highScoreCount; i++) {
       if (currentScore > highScores[i].score) {
-        isHigh = true;
+        isHighScore = true;
         break;
       }
     }
     
-    if (isHigh) {
+    if (isHighScore) {
       currentState = STATE_NAME_ENTRY;
     } else {
       currentState = STATE_MENU_MAIN;
@@ -1215,9 +1205,6 @@ void handleNameEntry() {
   }
 }
 
-// ===================================================================================
-// 10. SETUP & LOOP
-// ===================================================================================
 
 void setup() {
   // 1. Hardware Init
@@ -1279,7 +1266,7 @@ void loop() {
   }
   
   // Long press back to menu (Global safeguard, except during game)
-  if (btnPressed && (currentTime - lastDebounceTime > 1000)) {
+  if (btnPressed && (currentTime - lastDebounceTime > backToMenuDelay)) {
      if (currentState != STATE_GAME_PLAYING && currentState != STATE_INTRO && currentState != STATE_NAME_ENTRY) {
         currentState = STATE_MENU_MAIN;
         backToMenuIssuedTime = currentTime;      
