@@ -56,11 +56,11 @@ Repo for the Matrix project for the Introduction to Robotics course
   6. Joystick
   7. Active buzzer
   8. 3 10K$\Omega$ resistors for pull-up/pull-down
-  9. 47K$\Omega$ resistor
-  10. 100K$/Omega$ potentiometer
-  11. 330$\Omega$ resistor for the LCD's backlight
+  9. 47K $\Omega$ resistor
+  10. 100K $/Omega$  potentiometer
+  11. 330 $\Omega$ resistor for the LCD's backlight
   12. 100nF ceramic capacitor
-  13. 10$\mu$F electrolytic capacitor
+  13. 10 $\mu$ F electrolytic capacitor
   14. 1x IRFZ44N MOSFET
 
   After the change were made to the circuit, its diagram also changed into its final state, which is displayed below:
