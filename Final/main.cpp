@@ -54,7 +54,7 @@ const uint32_t menuMoveCooldown = 250;
 const int16_t imuTiltThreshold = 3;
 const uint32_t imuReadInterval = 100;
 // const uint32_t imuReinitializeInterval = 20000;
-uint32_t imuRunningTime = 0;
+// uint32_t imuRunningTime = 0;
 
 // Brightness Constants (User scale 1-10)
 const uint8_t brightnessMinUser = 1;
