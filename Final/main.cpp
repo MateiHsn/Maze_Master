@@ -111,6 +111,7 @@ enum SettingsOption {
   SET_SOUND,
   SET_IMU,
   SET_RESET,
+  SET_BACK,
   SETTINGS_COUNT
 };
 
@@ -168,7 +169,7 @@ uint8_t pausedSelectedOption = 0; // 0=Continue, 1=Exit
 // Gameplay Variables
 uint16_t playerCol = 0;
 uint16_t playerRow = 0;
-bool playerAlive = true;
+// bool playerAlive = true;
 uint16_t currentScore = 0;
 uint8_t currentLevelIndex = 0;
 uint32_t levelStartTime = 0;
@@ -719,6 +720,9 @@ void handleSettingsMenu() {
       case SET_RESET: 
         lcd.print(F("Reset Scores"));
         break;
+      case SET_BACK:
+        lcd.print(F("Back to Menu"));
+        break;
     }
     lcd.setCursor(0, 1);
     lcd.print(F("Back: Hold Btn"));
@@ -751,6 +755,9 @@ void handleSettingsMenu() {
         break;
       case SET_RESET:
         currentState = STATE_MENU_SETTINGS_RESET_SCORES;
+        break;
+      case SET_BACK:
+        currentState = STATE_MENU_SETTINGS;
         break;
      }
   }
@@ -1279,7 +1286,6 @@ void loop() {
   }
 
 
-  if(backToMenuIssuedTime - currentTime > backToMenuDelay) {
     // State Machine
     switch(currentState) {
       case STATE_INTRO:
@@ -1331,6 +1337,4 @@ void loop() {
         currentState = STATE_MENU_MAIN;
         break;
     }
-  }
-
 }
