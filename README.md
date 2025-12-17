@@ -60,7 +60,7 @@ Repo for the Matrix project for the Introduction to Robotics course
   10. 100K $/Omega$  potentiometer
   11. 330 $\Omega$ resistor for the LCD's backlight
   12. 100 nF ceramic capacitor
-  13. 10 $\mu$F electrolytic capacitor
+  13. 10 $\mu$ F electrolytic capacitor
   14. 1x IRFZ44N MOSFET
 
   After the change were made to the circuit, its diagram also changed into its final state, which is displayed below:
