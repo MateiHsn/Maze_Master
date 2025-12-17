@@ -40,8 +40,8 @@ const uint8_t totalLevels = 3;
 const uint8_t matrixSize = 8;
 const uint8_t maxLevelEntities = 10;
 const uint16_t pointsPerStar = 10;
-const uint16_t baseLevelClearPoints = 1000;
-const uint16_t timeBonusDeduction = 10; // Points lost per second
+const uint16_t baseLevelClearPoints = 6000;
+const uint16_t timeBonusDeduction = 100; // Points lost per second
 const uint8_t minStartDist = 3;
 const uint8_t minExitDist = 2;
 
@@ -859,14 +859,17 @@ void handleSettingsReset() {
   if (btnJustPressed) {
     if (confirm) { 
       // NO selected
+      btnJustPressed = false;
       currentState = STATE_MENU_SETTINGS;
     } else {
       // YES selected
       resetHighScores();
       lcd.clear();
       lcd.print(F("Scores Reset!"));
-      delay(1000);
-      currentState = STATE_MENU_SETTINGS;
+      
+      if(btnJustPressed){
+        currentState = STATE_MENU_SETTINGS;
+      }
     }
     playSoundSequence(seqMenuSelect, 2);
     drawn = false;
