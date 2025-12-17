@@ -73,4 +73,4 @@ Repo for the Matrix project for the Introduction to Robotics course
 
   The final, functioning circuit can be seen below:
 
-  [Video showcasing functionality]()
+  [Video showcasing functionality](https://youtu.be/UF_sIgvUU6U)
