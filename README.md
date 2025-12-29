@@ -1,5 +1,5 @@
-# Matrix Project
-Repo for the Matrix project for the Introduction to Robotics course
+# Maze Master
+Repo for the Matrix project for the Introduction to Robotics course.
 
   ## Task requirements
 
